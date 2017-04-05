@@ -1,6 +1,7 @@
 var express = require('express')
- 
 var app = express()
+
+var Database = require('./Database.js');
 
 app.listen(8080);
 

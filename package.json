@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/JSalter15/E4CiOSBackend/issues"
   },
-  "homepage": "https://github.com/JSalter15/E4CiOSBackend#readme"
+  "homepage": "https://github.com/JSalter15/E4CiOSBackend#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
 }

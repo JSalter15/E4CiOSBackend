@@ -22,7 +22,7 @@ Account APIs
 app.post('/api/login', function(req, res, next) {
 	Database.validateUser(req.body.email, req.body.password, function(err, data) {
 		if (err) return next(err);
-		res.status(200);
+		res.status(200).json(data);
 	});
 });
 
@@ -38,9 +38,9 @@ app.post('/api/createaccount', function(req, res, next) {
 	let gender = req.body.gender;
 	let expertise = req.body.expertise;
 
-	Database.createUser(firstname, lastname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise, function(err, data) {
+	Database.createUser(firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise, function(err, data) {
 		if (err) return next(err);
-		res.status(200);
+		res.status(200).json({uuid:data, firstname:firstname, lastname:lastname});
 	});
 });
 

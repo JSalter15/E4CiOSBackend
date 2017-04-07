@@ -25,7 +25,6 @@ Database.createUser = function(firstname, lastname, email, password, profstatus,
 				Hash.hashPassword(password, function(e, hash) {
 					if (e)
 						callback(e);
-					var query = "INSERT INTO users (uuid, firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise) VALUES (uuid_generate_v4(), '" + firstname + "', '" + lastname + "', '" + email + "', '" + hash + "', '" + profstatus + "', '" + affiliation + "', '" + country + "', " + age + ", '" + gender + "', ARRAY" + expertise + ")";
 					client.query("INSERT INTO users (uuid, firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise) VALUES (uuid_generate_v4(), '" + firstname + "', '" + lastname + "', '" + email + "', '" + hash + "', '" + profstatus + "', '" + affiliation + "', '" + country + "', " + age + ", '" + gender + "', ARRAY" + expertise + ")");
 					client.query("SELECT * FROM users WHERE email = '" + email + "'").on('end', function(result) {
 						let uuid = result.rows[0]["uuid"];

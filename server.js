@@ -1,29 +1,34 @@
 var express = require('express')
 var app = express()
-
 var Database = require('./database.js');
+let bodyParser = require('body-parser');
 
-app.listen(8080);
+let server = app.listen(process.env.PORT || 8080, function () {
+    let port = server.address().port;
+    console.log("App now running on port", port);
+});
 
-// Database.createUser('Joe', 'Salter', 'joe@joe.joe', 'pw', 'engineer', 'prof', 'USA', 12, 'M', "['Water', 'Engery']", function(err, res) {
-// 	if (err) {
-// 		console.log(err);
-// 	}
-// 	else
-// 		console.log(res)
-// });
+app.use(bodyParser.json());
+
+// to support URL-encoded bodies
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 /******************************************************************************
 Account APIs
 *******************************************************************************/
 
-// app.post('/api/login', function(req, res, next) {
-
-// });
+app.post('/api/login', function(req, res, next) {
+	Database.validateUser(req.body.email, req.body.password, function(err, data) {
+		if (err) return next(err);
+		res.status(200);
+	});
+});
 
 app.post('/api/createaccount', function(req, res, next) {
-	let firstname = req.body.firstName;
-	let lastname = req.body.lastName;
+	let firstname = req.body.firstname;
+	let lastname = req.body.lastname;
 	let email = req.body.email;
 	let password = req.body.password;
 	let profstatus = req.body.profstatus;
@@ -34,8 +39,8 @@ app.post('/api/createaccount', function(req, res, next) {
 	let expertise = req.body.expertise;
 
 	Database.createUser(firstname, lastname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise, function(err, data) {
-		if err return next(err);
-		res.status(200).json({uuid: data, firstname: firstname, lastname: lastname, email: email});
+		if (err) return next(err);
+		res.status(200);
 	});
 });
 

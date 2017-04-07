@@ -26,17 +26,40 @@ Database.createUser = function(firstname, lastname, email, password, profstatus,
 					if (e)
 						callback(e);
 					var query = "INSERT INTO users (uuid, firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise) VALUES (uuid_generate_v4(), '" + firstname + "', '" + lastname + "', '" + email + "', '" + hash + "', '" + profstatus + "', '" + affiliation + "', '" + country + "', " + age + ", '" + gender + "', ARRAY" + expertise + ")";
-					console.log(query);
 					client.query("INSERT INTO users (uuid, firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise) VALUES (uuid_generate_v4(), '" + firstname + "', '" + lastname + "', '" + email + "', '" + hash + "', '" + profstatus + "', '" + affiliation + "', '" + country + "', " + age + ", '" + gender + "', ARRAY" + expertise + ")");
 					client.query("SELECT * FROM users WHERE email = '" + email + "'").on('end', function(result) {
 						let uuid = result.rows[0]["uuid"];
-						console.log(uuid);
 						done();
 						callback(null, uuid);
 					});
 				});
 			}
 		});
+	});
+};
+
+// Log in a user
+Database.validateUser = function(email, password, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		let query = client.query("SELECT * FROM users WHERE email = '" + email + "'").on('end', function(result) {
+			if (result.rowCount == 0) callback("user does not exist");
+			else {
+				let uuid = result.rows[0]["uuid"];
+				let firstname = result.rows[0]["firstname"];
+				let lastname = result.rows[0]["lastname"];
+				done();
+				Hash.validatePassword(password, result.rows[0].password, function(e, res) {
+					if (e) callback(e);
+					if (res) callback(null, {uuid : uuid, firstname : firstname, lastname: lastname});
+					else callback("password or username does not match");
+				});
+			}
+		})
 	});
 };
 

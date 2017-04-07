@@ -62,4 +62,34 @@ Database.validateUser = function(email, password, callback) {
 	});
 };
 
+Database.editUser = function() {
+
+}
+
+Database.deleteUser = function() {
+
+}
+
+Database.createProject = function(title, author, description, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) callback(err);
+
+		client.query("SELECT EXISTS(SELECT * FROM projects WHERE title = '" + title + "')").on('row', function(row, result) {
+			if (row["exists"] == true) {
+				done();
+				let errorString = "A project already exists with that title!";
+				callback(errorString);
+			} else {
+				client.query("INSERT INTO projects (uuid, title, author, description) VALUES (uuid_generate_v4(), '" + title + "', '" + author + "', '" + description + "')");
+				client.query("SELECT * FROM projects WHERE title = '" + title + "'").on('end', function(result) {
+					let uuid = result.rows[0]["uuid"];
+					done();
+					callback(null, {uuid: uuid});
+				});
+				done()
+			}
+		});
+	});
+};
+
 module.exports = Database;

@@ -66,13 +66,16 @@ app.post('/api/createaccount', function(req, res, next) {
 // *******************************************************************************/
 
 
-// *****************************************************************************
+// /*****************************************************************************
 // Project APIs
-// ******************************************************************************
+// ******************************************************************************/
 
-// app.post('/api/createproject', function(req, res, next) {
-
-// });
+app.post('/api/createproject', function(req, res, next) {
+	Database.createProject(req.body.title, req.body.author, req.body.description, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
 
 // app.post('/api/editproject', function(req, res, next) {
 

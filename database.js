@@ -1,4 +1,6 @@
 let pg = require('pg');
+var Database = [];
+var Hash = require('./Hash.js');
 
 const DATABASE_URL = 'postgres://xeqtnkjlbzfhad:0f8eb3c9a777c80ad960ea9ac1dd010596b1991daf523f65db58682308d1fab7@ec2-23-23-223-2.compute-1.amazonaws.com:5432/d7o63skrv6brj5'
 pg.defaults.ssl = true;
@@ -23,10 +25,12 @@ Database.createUser = function(firstname, lastname, email, password, profstatus,
 				Hash.hashPassword(password, function(e, hash) {
 					if (e)
 						callback(e);
-
-					client.query("INSERT INTO users (uuid, firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise, articles, webinars, projects) VALUES (uuid_generate_v4()'" + "', '" + firstname + "', '" + lastname + "', '" + email + "', '" + hash + "', '" + profstatus + "', '" + affiliation + "', '" + country + "', '" + age + "', '" + gender + "', '" + expertise + "', [], [], [])");
+					var query = "INSERT INTO users (uuid, firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise) VALUES (uuid_generate_v4(), '" + firstname + "', '" + lastname + "', '" + email + "', '" + hash + "', '" + profstatus + "', '" + affiliation + "', '" + country + "', " + age + ", '" + gender + "', ARRAY" + expertise + ")";
+					console.log(query);
+					client.query("INSERT INTO users (uuid, firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise) VALUES (uuid_generate_v4(), '" + firstname + "', '" + lastname + "', '" + email + "', '" + hash + "', '" + profstatus + "', '" + affiliation + "', '" + country + "', " + age + ", '" + gender + "', ARRAY" + expertise + ")");
 					client.query("SELECT * FROM users WHERE email = '" + email + "'").on('end', function(result) {
 						let uuid = result.rows[0]["uuid"];
+						console.log(uuid);
 						done();
 						callback(null, uuid);
 					});
@@ -35,3 +39,5 @@ Database.createUser = function(firstname, lastname, email, password, profstatus,
 		});
 	});
 };
+
+module.exports = Database;

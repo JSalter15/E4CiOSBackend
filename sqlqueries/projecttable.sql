@@ -1,6 +1,6 @@
 create table projects(
 	uuid uuid,
-	title varchar(100),
 	author uuid,
+	title varchar(100),
 	description varchar(256)
 );

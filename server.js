@@ -33,14 +33,16 @@ app.post('/api/createaccount', function(req, res, next) {
 	let password = req.body.password;
 	let profstatus = req.body.profstatus;
 	let affiliation = req.body.affiliation;
+	let expertise = req.body.expertise;
 	let country = req.body.country;
 	let age = req.body.age;
 	let gender = req.body.gender;
-	let expertise = req.body.expertise;
+	let sectors = req.body.sectors;
+	
 
-	Database.createUser(firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise, function(err, data) {
+	Database.createUser(firstname, lastname, email, password, profstatus, affiliation, expertise, country, age, gender, sectors, function(err, data) {
 		if (err) return next(err);
-		res.status(200).json({uuid:data, firstname:firstname, lastname:lastname});
+		res.status(200).json({id:data, firstname:firstname, lastname:lastname});
 	});
 });
 
@@ -48,27 +50,30 @@ app.post('/api/createaccount', function(req, res, next) {
 
 // });
 
-// app.post('/api/deleteaccount', function(req, res, next) {
-
-// });
+app.post('/api/deleteaccount', function(req, res, next) {
+	Database.deleteUser(req.body.id, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json({message:"success"});
+	})
+});
 
 // app.post('/api/getuser', function(req, res, next) {
 
 // });
 
-// /******************************************************************************
-// News APIs
-// *******************************************************************************/
+/******************************************************************************
+News APIs
+*******************************************************************************/
 
 
-// /******************************************************************************
-// Webinars APIs
-// *******************************************************************************/
+/******************************************************************************
+Webinars APIs
+*******************************************************************************/
 
 
-// /*****************************************************************************
-// Project APIs
-// ******************************************************************************/
+/*****************************************************************************
+Project APIs
+******************************************************************************/
 
 app.post('/api/createproject', function(req, res, next) {
 	Database.createProject(req.body.title, req.body.author, req.body.description, function(err, data) {
@@ -85,9 +90,9 @@ app.post('/api/createproject', function(req, res, next) {
 
 // });
 
-// /******************************************************************************
-// Search APIs
-// *******************************************************************************/
+/******************************************************************************
+Search APIs
+*******************************************************************************/
 
 // app.post('/api/searchusers', function(req, res, next) {
 

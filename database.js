@@ -10,11 +10,11 @@ pg.connect(DATABASE_URL, function(err, client) {
   console.log('Connected to postgres! Getting schemas...');
 });
 
-Database.createUser = function(firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise, callback) {
+Database.createUser = function(firstname, lastname, email, password, profstatus, affiliation, expertise, country, age, gender, sectors, callback) {
 	pg.connect(DATABASE_URL, function(err, client, done) {
 		if (err) callback(err);
 
-		client.query("SELECT EXISTS(SELECT * FROM users WHERE email = '" + email + "')").on('row', function(row, result) {
+		client.query("SELECT EXISTS(SELECT * FROM users WHERE user_email = '" + email + "')").on('row', function(row, result) {
 			if (row["exists"] == true) {
 				done();
 				let errorString = email + " is taken";
@@ -25,11 +25,11 @@ Database.createUser = function(firstname, lastname, email, password, profstatus,
 				Hash.hashPassword(password, function(e, hash) {
 					if (e)
 						callback(e);
-					client.query("INSERT INTO users (uuid, firstname, lastname, email, password, profstatus, affiliation, country, age, gender, expertise) VALUES (uuid_generate_v4(), '" + firstname + "', '" + lastname + "', '" + email + "', '" + hash + "', '" + profstatus + "', '" + affiliation + "', '" + country + "', " + age + ", '" + gender + "', ARRAY" + expertise + ")");
-					client.query("SELECT * FROM users WHERE email = '" + email + "'").on('end', function(result) {
-						let uuid = result.rows[0]["uuid"];
+					client.query("INSERT INTO users (id, user_firstname, user_lastname, user_email, user_pass, user_profstatus, user_affiliation, user_expertise, user_country, user_age, user_gender, user_sectors) VALUES (uuid_generate_v4(), '" + firstname + "', '" + lastname + "', '" + email + "', '" + hash + "', '" + profstatus + "', '" + affiliation + "', '" + expertise + "', '" + country + "', " + age + ", '" + gender + "', ARRAY" + sectors + ")");
+					client.query("SELECT * FROM users WHERE user_email = '" + email + "'").on('end', function(result) {
+						let id = result.rows[0]["id"];
 						done();
-						callback(null, uuid);
+						callback(null, id);
 					});
 				});
 			}
@@ -45,16 +45,16 @@ Database.validateUser = function(email, password, callback) {
 			callback(err);
 		}
 
-		let query = client.query("SELECT * FROM users WHERE email = '" + email + "'").on('end', function(result) {
+		let query = client.query("SELECT * FROM users WHERE user_email = '" + email + "'").on('end', function(result) {
 			if (result.rowCount == 0) callback("user does not exist");
 			else {
-				let uuid = result.rows[0]["uuid"];
-				let firstname = result.rows[0]["firstname"];
-				let lastname = result.rows[0]["lastname"];
+				let id = result.rows[0]["id"];
+				let firstname = result.rows[0]["user_firstname"];
+				let lastname = result.rows[0]["user_lastname"];
 				done();
-				Hash.validatePassword(password, result.rows[0].password, function(e, res) {
+				Hash.validatePassword(password, result.rows[0].user_pass, function(e, res) {
 					if (e) callback(e);
-					if (res) callback(null, {uuid : uuid, firstname : firstname, lastname: lastname});
+					if (res) callback(null, {id : id, firstname : firstname, lastname: lastname});
 					else callback("password or username does not match");
 				});
 			}
@@ -66,9 +66,18 @@ Database.editUser = function() {
 
 }
 
-Database.deleteUser = function() {
+Database.deleteUser = function(id, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
 
-}
+		client.query("DELETE FROM users WHERE id = '" + id + "'"); 
+		done();
+		callback(null, true);
+	});
+};
 
 Database.createProject = function(title, author, description, callback) {
 	pg.connect(DATABASE_URL, function(err, client, done) {

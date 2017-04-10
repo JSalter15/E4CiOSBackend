@@ -40,7 +40,7 @@ app.post('/api/createaccount', function(req, res, next) {
 	let sectors = req.body.sectors;
 	
 
-	Database.createUser(firstname, lastname, email, password, profstatus, affiliation, expertise, country, age, gender, sectors, function(err, data) {
+	Database.createAccount(firstname, lastname, email, password, profstatus, affiliation, expertise, country, age, gender, sectors, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json({id:data, firstname:firstname, lastname:lastname});
 	});
@@ -51,7 +51,7 @@ app.post('/api/createaccount', function(req, res, next) {
 // });
 
 app.post('/api/deleteaccount', function(req, res, next) {
-	Database.deleteUser(req.body.id, function(err, data) {
+	Database.deleteAccount(req.body.id, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json({message:"success"});
 	})
@@ -76,7 +76,21 @@ Project APIs
 ******************************************************************************/
 
 app.post('/api/createproject', function(req, res, next) {
-	Database.createProject(req.body.title, req.body.author, req.body.description, function(err, data) {
+	Database.createProject(req.body.owner, req.body.title, req.body.contributors, req.body.description, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/addcontributortoproject', function(req, res, next) {
+	Database.addContributorToProject(req.body.projectid, req.body.contributorid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/removecontributorfromproject', function(req, res, next) {
+	Database.removeContributorFromProject(req.body.projectid, req.body.contributorid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});

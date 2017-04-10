@@ -10,7 +10,7 @@ pg.connect(DATABASE_URL, function(err, client) {
   console.log('Connected to postgres! Getting schemas...');
 });
 
-Database.createUser = function(firstname, lastname, email, password, profstatus, affiliation, expertise, country, age, gender, sectors, callback) {
+Database.createAccount = function(firstname, lastname, email, password, profstatus, affiliation, expertise, country, age, gender, sectors, callback) {
 	pg.connect(DATABASE_URL, function(err, client, done) {
 		if (err) callback(err);
 
@@ -62,11 +62,7 @@ Database.validateUser = function(email, password, callback) {
 	});
 };
 
-Database.editUser = function() {
-
-}
-
-Database.deleteUser = function(id, callback) {
+Database.deleteAccount = function(id, callback) {
 	pg.connect(DATABASE_URL, function(err, client, done) {
 		if (err) {
 			done();
@@ -79,7 +75,7 @@ Database.deleteUser = function(id, callback) {
 	});
 };
 
-Database.createProject = function(title, author, description, callback) {
+Database.createProject = function(owner, title, contributors, description, callback) {
 	pg.connect(DATABASE_URL, function(err, client, done) {
 		if (err) callback(err);
 
@@ -89,16 +85,36 @@ Database.createProject = function(title, author, description, callback) {
 				let errorString = "A project already exists with that title!";
 				callback(errorString);
 			} else {
-				client.query("INSERT INTO projects (uuid, title, author, description) VALUES (uuid_generate_v4(), '" + title + "', '" + author + "', '" + description + "')");
+				client.query("INSERT INTO projects (id, owner, title, contributors, description) VALUES (uuid_generate_v4(), '" + owner + "', '" + title + "', ARRAY" + contributors + "::uuid[], '" + description + "')");
 				client.query("SELECT * FROM projects WHERE title = '" + title + "'").on('end', function(result) {
-					let uuid = result.rows[0]["uuid"];
+					let id = result.rows[0]["uuid"];
 					done();
-					callback(null, {uuid: uuid});
+					callback(null, {id: id});
 				});
 				done()
 			}
 		});
 	});
 };
+
+Database.addContributorToProject = function(projectid, contributorid, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) callback(err);
+		client.query("UPDATE projects SET contributors = array_append(contributors, '" + contributorid + "') WHERE ID = '" + projectid + "' AND NOT contributors::text[] @> ARRAY['" + contributorid + "']");
+		client.query("UPDATE users SET user_projects = array_append(user_projects, '" + projectid + "') WHERE ID = '" + contributorid + "' AND NOT user_projects::text[] @> ARRAY['" + projectid + "']");
+		done();
+		callback(null, 200);
+	});
+}
+
+Database.removeContributorFromProject = function(projectid, contributorid, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) callback(err);
+		client.query("UPDATE projects SET contributors = array_remove(contributors, '" + contributorid + "') WHERE ID = '" + projectid + "'");
+		client.query("UPDATE users SET user_projects = array_remove(user_projects, '" + projectid + "') WHERE ID = '" + contributorid + "'");
+		done();
+		callback(null, 200);
+	});
+}
 
 module.exports = Database;

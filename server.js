@@ -96,22 +96,52 @@ app.post('/api/removecontributorfromproject', function(req, res, next) {
 	});
 });
 
+app.post('/api/getprojectbyid', function(req, res, next) {
+	Database.getProjectByID(req.body.projectid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/getprojectbysector', function(req, res, next) {
+	Database.getProjectBySector(req.body.sector, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/getallprojects', function(req, res, next) {
+	Database.getAllProjects(function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
 // app.post('/api/editproject', function(req, res, next) {
 
 // });
 
-// app.post('/api/deleteproject', function(req, res, next) {
-
-// });
+app.post('/api/deleteproject', function(req, res, next) {
+	Database.deleteProejct(req.body.projectid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
 
 /******************************************************************************
 Search APIs
 *******************************************************************************/
 
-// app.post('/api/searchusers', function(req, res, next) {
+app.post('/api/searchusers', function(req, res, next) {
+	Database.searchUsers(req.body.query, req.body.user, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data)
+	});
+});
 
-// });
-
-// app.post('/api/searchprojects', function(req, res, next) {
-
-// });
+app.post('/api/searchprojects', function(req, res, next) {
+	Database.searchProjects(req.body.query, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data)
+	});
+});

@@ -10,9 +10,16 @@ pg.connect(DATABASE_URL, function(err, client) {
   console.log('Connected to postgres! Getting schemas...');
 });
 
+/******************************************************************************
+Account queries
+*******************************************************************************/
+
 Database.createAccount = function(firstname, lastname, email, password, profstatus, affiliation, expertise, country, age, gender, sectors, callback) {
 	pg.connect(DATABASE_URL, function(err, client, done) {
-		if (err) callback(err);
+		if (err) {
+			done();
+			callback(err);
+		}
 
 		client.query("SELECT EXISTS(SELECT * FROM users WHERE user_email = '" + email + "')").on('row', function(row, result) {
 			if (row["exists"] == true) {
@@ -75,9 +82,17 @@ Database.deleteAccount = function(id, callback) {
 	});
 };
 
+
+/******************************************************************************
+Project queries
+*******************************************************************************/
+
 Database.createProject = function(owner, title, contributors, description, callback) {
 	pg.connect(DATABASE_URL, function(err, client, done) {
-		if (err) callback(err);
+		if (err) {
+			done();
+			callback(err);
+		}
 
 		client.query("SELECT EXISTS(SELECT * FROM projects WHERE title = '" + title + "')").on('row', function(row, result) {
 			if (row["exists"] == true) {
@@ -99,7 +114,11 @@ Database.createProject = function(owner, title, contributors, description, callb
 
 Database.addContributorToProject = function(projectid, contributorid, callback) {
 	pg.connect(DATABASE_URL, function(err, client, done) {
-		if (err) callback(err);
+		if (err) {
+			done();
+			callback(err);
+		}
+
 		client.query("UPDATE projects SET contributors = array_append(contributors, '" + contributorid + "') WHERE ID = '" + projectid + "' AND NOT contributors::text[] @> ARRAY['" + contributorid + "']");
 		client.query("UPDATE users SET user_projects = array_append(user_projects, '" + projectid + "') WHERE ID = '" + contributorid + "' AND NOT user_projects::text[] @> ARRAY['" + projectid + "']");
 		done();
@@ -109,12 +128,82 @@ Database.addContributorToProject = function(projectid, contributorid, callback) 
 
 Database.removeContributorFromProject = function(projectid, contributorid, callback) {
 	pg.connect(DATABASE_URL, function(err, client, done) {
-		if (err) callback(err);
+		if (err) {
+			done();
+			callback(err);
+		}
+
 		client.query("UPDATE projects SET contributors = array_remove(contributors, '" + contributorid + "') WHERE ID = '" + projectid + "'");
 		client.query("UPDATE users SET user_projects = array_remove(user_projects, '" + projectid + "') WHERE ID = '" + contributorid + "'");
 		done();
 		callback(null, 200);
 	});
 }
+
+Database.getProjectByID = function(projectid, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+	});
+}
+
+Database.getProjectBySector = function(sector, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+	});
+}
+
+Database.getAllProjects = function(callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+	});
+}
+
+Database.deleteProject = function(projectid, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+	});
+}
+
+
+/******************************************************************************
+Search queries
+*******************************************************************************/
+
+Database.searchUsers = function(query, user, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+	});
+}
+
+Database.searchProjects = function(query, callback) {
+	pg.connect(DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+	});
+}
+
 
 module.exports = Database;

@@ -57,9 +57,12 @@ app.post('/api/deleteaccount', function(req, res, next) {
 	})
 });
 
-// app.post('/api/getuser', function(req, res, next) {
-
-// });
+app.post('/api/getuserbyid', function(req, res, next) {
+	Database.getUserByID(req.body.userid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	})
+});
 
 /******************************************************************************
 News APIs
@@ -76,7 +79,7 @@ Project APIs
 ******************************************************************************/
 
 app.post('/api/createproject', function(req, res, next) {
-	Database.createProject(req.body.owner, req.body.title, req.body.contributors, req.body.description, function(err, data) {
+	Database.createProject(req.body.owner, req.body.title, req.body.contributors, req.body.description, req.body.sectors, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
@@ -103,26 +106,22 @@ app.post('/api/getprojectbyid', function(req, res, next) {
 	});
 });
 
-app.post('/api/getprojectbysector', function(req, res, next) {
-	Database.getProjectBySector(req.body.sector, function(err, data) {
+app.post('/api/getprojectsbysector', function(req, res, next) {
+	Database.getProjectsBySector(req.body.sector, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
 });
 
-app.post('/api/getallprojects', function(req, res, next) {
+app.get('/api/getallprojects', function(req, res, next) {
 	Database.getAllProjects(function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
 });
 
-// app.post('/api/editproject', function(req, res, next) {
-
-// });
-
 app.post('/api/deleteproject', function(req, res, next) {
-	Database.deleteProejct(req.body.projectid, function(err, data) {
+	Database.deleteProject(req.body.projectid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});

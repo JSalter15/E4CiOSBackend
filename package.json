@@ -20,6 +20,8 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
+    "mariasql": "^0.2.6",
+    "mysql": "^2.13.0",
     "pg": "^6.1.5"
   }
 }

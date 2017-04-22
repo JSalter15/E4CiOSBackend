@@ -16,7 +16,8 @@
     "url": "https://github.com/JSalter15/E4CiOSBackend/issues"
   },
   "engines": {
-    "node": "6.2.2"
+    "node": "6.2.2",
+    "npm": "4.0.2"
   },
   "homepage": "https://github.com/JSalter15/E4CiOSBackend#readme",
   "dependencies": {

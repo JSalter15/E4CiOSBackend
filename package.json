@@ -15,12 +15,14 @@
   "bugs": {
     "url": "https://github.com/JSalter15/E4CiOSBackend/issues"
   },
+  "engines": {
+    "node": "6.2.2"
+  },
   "homepage": "https://github.com/JSalter15/E4CiOSBackend#readme",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
-    "mariasql": "^0.2.6",
     "mysql": "^2.13.0",
     "pg": "^6.1.5"
   }

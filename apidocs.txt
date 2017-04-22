@@ -1,0 +1,208 @@
+POST: /api/createaccount
+
+	Body:
+	{
+		"firstname":"John", 
+		"lastname":"Doe", 
+		"email":"doe@test.test", 
+		"password":"dog", 
+		"profstatus":"student", 
+		"affiliation":"academia",
+		"expertise": "novice",
+		"country":"MEX", 
+		"age":"42", 
+		"gender":"M", 
+		"sectors":"['water', 'energy']"
+	}
+
+	Returns:
+	{
+		"id": "ad6776f1-8f44-426a-833d-0a53f67f40f9",
+		"firstname": "John",
+		"lastname": "Doe"
+	}
+
+POST: /api/login
+
+	Body:
+	{
+		"email":"doe@test.test", 
+		"password":"dog"
+	}
+
+	Returns:
+	{
+		"id": "913317ac-fb62-495a-a672-fa4fed9d7bac",
+		"firstname": "John",
+		"lastname": "Doe"
+	}
+
+
+POST: /api/getuserbyid
+	
+	Body:
+	{
+		"userid": "b49c8721-1f0d-41ab-a1dd-99ee0a826ff9"
+	}
+
+	Returns:
+	{
+		"firstname": "Doe",
+		"lastname": "Dalter",
+		"affiliation": "academia",
+		"expertise": "novice",
+		"sectors": [
+			"water",
+			"energy"
+			],
+		"projects": null
+	}
+
+POST: /api/deleteaccount
+
+	Body:
+	{
+		"userid": "b49c8721-1f0d-41ab-a1dd-99ee0a826ff9"
+	}
+
+	Returns:
+	200 status
+
+
+POST: /api/createproject
+
+	Body:
+	{
+		"title": "Test",
+		"owner": "b49c8721-1f0d-41ab-a1dd-99ee0a826ff9",
+		"contributors": "['1d68dc24-a0f1-44bd-95fc-11cdd2ecbf95']",
+		"description": "test description",
+		"sectors": "['Water', 'ICT']"
+	}
+
+	Returns:
+	{
+		"id": "9eb2d03e-ae97-4079-9636-0f6741903d03"
+	}
+
+POST: /api/addcontributortoproject
+
+	Body:
+	{
+		"projectid":"79b10e10-2b42-42b4-99ea-84d23c1a7527",
+		"contributorid":"75e39ad5-d644-4ff1-a7a4-74094f01eb35"
+	}
+
+	Returns:
+	200 status
+
+POST: /api/removecontributorfromproject
+
+	Body:
+	{
+		"projectid":"79b10e10-2b42-42b4-99ea-84d23c1a7527",
+		"contributorid":"75e39ad5-d644-4ff1-a7a4-74094f01eb35"
+	}
+
+	Returns:
+	200 status
+
+POST: /api/getprojectbyid
+
+	Body:
+	{
+		"projectid": "fba0d5a8-100e-4aef-a330-06ae50928bfc"
+	}	
+
+	Returns:
+	{
+		"id": "fba0d5a8-100e-4aef-a330-06ae50928bfc",
+		"owner": "b49c8721-1f0d-41ab-a1dd-99ee0a826ff9",
+		"title": "One more Test pound",
+		"contributors": [
+			"1d68dc24-a0f1-44bd-95fc-11cdd2ecbf95"
+			],
+		"description": "test description",
+		"date_created": "2017-04-21T23:30:51.101Z",
+		"sectors": [
+			"Water",
+			"ICT"
+			]
+	}
+
+POST: /api/getprojectsbysector
+	
+	Body:
+	{
+		"sector": "Water"
+	}
+
+	Returns: 
+	[
+	  {
+	    "id": "9eb2d03e-ae97-4079-9636-0f6741903d03",
+	    "owner": "b49c8721-1f0d-41ab-a1dd-99ee0a826ff9",
+	    "title": "Saving the World",
+	    "contributors": [
+	      "1d68dc24-a0f1-44bd-95fc-11cdd2ecbf95"
+	    ],
+	    "description": "test description",
+	    "date_created": "2017-04-22T21:53:02.579Z",
+	    "sectors": [
+	      "Water",
+	      "ICT"
+	    ]
+	  },
+	  {
+	    "id": "fba0d5a8-100e-4aef-a330-06ae50928bfc",
+	    "owner": "b49c8721-1f0d-41ab-a1dd-99ee0a826ff9",
+	    "title": "One more Test pound",
+	    "contributors": [
+	      "1d68dc24-a0f1-44bd-95fc-11cdd2ecbf95"
+	    ],
+	    "description": "test description",
+	    "date_created": "2017-04-21T23:30:51.101Z",
+	    "sectors": [
+	      "Water",
+	      "ICT"
+	    ]
+	  },
+	  {
+	    "id": "863d4522-b39c-49e6-b11e-7d1d3e476eb2",
+	    "owner": "b49c8721-1f0d-41ab-a1dd-99ee0a826ff9",
+	    "title": "Another Test pound",
+	    "contributors": [
+	      "1d68dc24-a0f1-44bd-95fc-11cdd2ecbf95"
+	    ],
+	    "description": "test description",
+	    "date_created": "2017-04-21T23:06:11.186Z",
+	    "sectors": [
+	      "Water",
+	      "Sanitation"
+	    ]
+	  },
+	  ...
+	]
+
+GET: /api/getallprojects
+
+	Returns:
+	Same as above
+
+
+POST: /api/searchusers
+
+	Body:
+	{
+		"query": "blah"
+	}
+
+POST: /api/searchprojects
+	
+	Body:
+	{
+		"query": "blah"
+	}
+
+
+

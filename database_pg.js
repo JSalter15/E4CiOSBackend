@@ -94,7 +94,7 @@ Database.getUserByID = function(userid, callback) {
 			callback(err);
 		}
 
-		let query = client.query(`SELECT * FROM users WHERE userid = '${id}'`).on('end', function(result) {
+		let query = client.query(`SELECT * FROM users WHERE id = '${userid}'`).on('end', function(result) {
 			if (result.rowCount == 0) callback("user does not exist");
 			else {
 
@@ -123,7 +123,7 @@ Database.deleteAccount = function(id, callback) {
 
 		client.query(`DELETE FROM users WHERE id = '${id}'`); 
 		done();
-		callback(null, true);
+		callback(null, 200);
 	});
 };
 
@@ -209,7 +209,7 @@ Database.getProjectsBySector = function(sector, callback) {
 			callback(err);
 		}
 
-		let query = client.query(`SELECT * FROM projects WHERE '${sector}' = ANY(sectors) ORDER BY date_created`).on('end', function(result) {
+		let query = client.query(`SELECT * FROM projects WHERE '${sector}' = ANY(sectors) ORDER BY date_created DESC`).on('end', function(result) {
 			if (result.rowCount == 0) callback("no projects for that sector");
 			else {
 				done();
@@ -227,7 +227,7 @@ Database.getAllProjects = function(callback) {
 			callback(err);
 		}
 
-		let query = client.query(`SELECT * FROM projects ORDER BY date_created`).on('end', function(result) {
+		let query = client.query(`SELECT * FROM projects ORDER BY date_created DESC`).on('end', function(result) {
 			if (result.rowCount == 0) callback("no projects!");
 			else {
 				done();
@@ -255,23 +255,33 @@ Database.deleteProject = function(projectid, callback) {
 Search queries
 *******************************************************************************/
 
-Database.searchUsers = function(query, user, callback) {
+Database.searchUsers = function(searchQuery, callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {
 			done();
 			callback(err);
 		}
+
+		let query = client.query(`SELECT * FROM users WHERE user_firstname || ' ' || user_lastname ILIKE '%${searchQuery}%' OR array_to_string(user_sectors, '|') ILIKE '%${searchQuery}%' OR user_country ILIKE '%${searchQuery}%'`).on('end', function(result) {
+			done();
+			callback(null, result.rows);
+		});
+
 
 	});
 };
 
-Database.searchProjects = function(query, callback) {
+Database.searchProjects = function(searchQuery, callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {
 			done();
 			callback(err);
 		}
 
+		let query = client.query(`SELECT * FROM projects WHERE title ILIKE '%${searchQuery}%' OR description ILIKE '%${searchQuery}%' OR array_to_string(sectors, '|') ILIKE '%${searchQuery}%' ORDER BY date_created DESC`).on('end', function(result) {
+			done();
+			callback(null, result.rows);
+		});
 	});
 };
 

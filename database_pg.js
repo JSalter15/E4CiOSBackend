@@ -44,7 +44,6 @@ Database.createAccount = function(firstname, lastname, email, password, profstat
 	});
 };
 
-// Log in a user
 Database.validateUser = function(email, password, callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {
@@ -109,6 +108,122 @@ Database.deleteAccount = function(id, callback) {
 	});
 };
 
+/******************************************************************************
+Favorite management for news & webinars queries
+*******************************************************************************/
+
+Database.favoriteArticleForUser = function(articleid, userid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		client.query(`UPDATE users SET fav_articles = array_append(fav_articles, ${articleid}) WHERE ID = '${userid}' AND NOT ${articleid} = ANY(fav_articles)`);
+		done();
+		callback(null, 200);
+	});
+}
+
+Database.unfavoriteArticleForUser = function(articleid, userid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		client.query(`UPDATE users SET fav_articles = array_remove(fav_articles, ${articleid}) WHERE ID = '${userid}'`);
+		done();
+		callback(null, 200);		
+	});
+}
+
+Database.favoriteWebinarForUser = function(webinarid, userid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		client.query(`UPDATE users SET fav_webinars = array_append(fav_webinars, ${webinarid}) WHERE ID = '${userid}' AND NOT ${webinarid} = ANY(fav_webinars)`);
+		done();
+		callback(null, 200);
+		
+	});
+}
+
+Database.unfavoriteWebinarForUser = function(webinarid, userid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		client.query(`UPDATE users SET fav_webinars = array_remove(fav_webinars, ${webinarid}) WHERE ID = '${userid}'`);
+		done();
+		callback(null, 200);
+	});
+}
+
+Database.getFavArticlesForUser = function(userid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		var fav_articles;
+		client.query(`SELECT * FROM users WHERE ID = '${userid}'`).on('end', function(result) {
+			fav_articles = result.rows[0]["fav_articles"];
+
+			if (fav_articles.length == 0) {
+				done();
+				return callback("user has no favorite articles");
+			}
+			client.query("SELECT * FROM wp_posts WHERE ID IN (" + fav_articles.join() + ")").on('end', function(result) {
+						
+				if (result.rowCount == 0) {
+					done()
+					return callback("user has no favorite articles");
+				}
+				done();
+				callback(null, result.rows);
+			});
+
+		});
+
+	});
+}
+
+Database.getFavWebinarsForUser = function(userid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		var fav_webinars;
+		client.query(`SELECT * FROM users WHERE ID = '${userid}'`).on('end', function(result) {
+			fav_articles = result.rows[0]["fav_webinars"];
+
+			if (fav_webinars.length == 0) {
+				done();
+				return callback("user has no favorite webinars");
+			}
+			client.query("SELECT * FROM wp_posts WHERE ID IN (" + fav_webinars.join() + ")").on('end', function(result) {
+						
+				if (result.rowCount == 0) {
+					done()
+					return callback("user has no favorite webinars");
+				}
+				done();
+				callback(null, result.rows);
+			});
+
+		});
+		
+	});
+}
 
 /******************************************************************************
 Project queries

@@ -83,8 +83,22 @@ app.post('/api/getnewsforcategory', function(req, res, next) {
 	});
 });
 
+app.post('/api/getarticlebyid', function(req, res, next) {
+	Database_e4c.getPostByID(req.body.articleid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
 app.post('/api/favoritearticleforuser', function(req, res, next) {
 	Database_pg.favoriteArticleForUser(req.body.articleid, req.body.userid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/unfavoritearticleforuser', function(req, res, next) {
+	Database_pg.unfavoriteArticleForUser(req.body.articleid, req.body.userid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
@@ -116,8 +130,22 @@ app.post('/api/getwebinarsforcategory', function(req, res, next) {
 	});
 });
 
+app.post('/api/getwebinarbyid', function(req, res, next) {
+	Database_e4c.getPostByID(req.body.articleid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
 app.post('/api/favoritewebinarforuser', function(req, res, next) {
 	Database_pg.favoriteWebinarForUser(req.body.webinarid, req.body.userid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/unfavoritewebinarforuser', function(req, res, next) {
+	Database_pg.unfavoriteWebinarForUser(req.body.webinarid, req.body.userid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});

@@ -47,6 +47,24 @@ Database.getPostsForCategory = function(category, postType, callback) {
 	});
 }
 
+Database.getPostByID = function(postid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		client.query(`SELECT * FROM wp_posts WHERE ID = ${postid}`).on('end', function(result) {
+			if (result.rowCount == 0) {
+				done();
+				return callback("post does not exist!");
+			}
+			done();
+			callback(null, result.rows[0]);
+		});
+	});
+}
+
 Database.getAllWebinars = function(callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {
@@ -80,15 +98,6 @@ Database.getAllNews = function(callback) {
 			}
 		});
 
-	});
-}
-
-Database.getWebinarsForSector = function() {
-	pg.connect(PG_DATABASE_URL, function(err, client, done) {
-		if (err) {
-			done();
-			callback(err);
-		}
 	});
 }
 

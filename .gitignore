@@ -58,3 +58,9 @@ typings/
 .env
 
 misc
+
+commands.load
+
+*.sql
+
+*.csv

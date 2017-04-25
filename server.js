@@ -1,7 +1,7 @@
 var express = require('express')
 var app = express()
 var Database_pg = require('./database_pg.js');
-var Database_mysql = require('./database_mysql.js');
+var Database_e4c = require('./database_e4c.js');
 let bodyParser = require('body-parser');
 
 let server = app.listen(process.env.PORT || 8080, function () {
@@ -62,17 +62,73 @@ app.post('/api/getuserbyid', function(req, res, next) {
 	Database_pg.getUserByID(req.body.userid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
-	})
+	});
 });
 
 /******************************************************************************
 News APIs
 *******************************************************************************/
 
+app.get('/api/getallnews', function(req, res, next) {
+	Database_e4c.getAllNews(function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/getnewsforcategory', function(req, res, next) {
+	Database_e4c.getPostsForCategory(req.body.category, "post", function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/favoritearticleforuser', function(req, res, next) {
+	Database_pg.favoriteArticleForUser(req.body.articleid, req.body.userid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/getfavarticlesforuser', function(req, res, next) {
+	Database_pg.getFavArticlesForUser(req.body.userid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
 
 /******************************************************************************
 Webinars APIs
 *******************************************************************************/
+
+app.get('/api/getallwebinars', function(req, res, next) {
+	Database_e4c.getAllWebinars(function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/getwebinarsforcategory', function(req, res, next) {
+	Database_e4c.getPostsForCategory(req.body.category, "wwebinars", function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/favoritewebinarforuser', function(req, res, next) {
+	Database_pg.favoriteWebinarForUser(req.body.webinarid, req.body.userid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/getfavwebinarsforuser', function(req, res, next) {
+	Database_pg.getFavWebinarsForUser(req.body.userid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
 
 
 /*****************************************************************************

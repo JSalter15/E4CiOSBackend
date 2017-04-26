@@ -56,6 +56,17 @@ app.post('/api/editaccount', function(req, res, next) {
 	let gender = req.body.gender;
 	let description = req.body.description;
 
+	console.log(id);
+	console.log(firstname);
+	console.log(lastname);
+	console.log(profstatus);
+	console.log(affiliation);
+	console.log(expertise);
+	console.log(country);
+	console.log(age);
+	console.log(gender);
+	console.log(description);
+
 	Database_pg.editAccount(id, firstname, lastname, profstatus, affiliation, expertise, country, age, gender, description, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);

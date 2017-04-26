@@ -49,7 +49,7 @@ Database.editAccount = function(id, firstname, lastname, profstatus, affiliation
 			done();
 			callback(err);
 		}
-
+		
 		client.query(`UPDATE users SET user_firstname = '${firstname}', user_lastname = '${lastname}', user_profstatus = ${profstatus}, user_affiliation = ${affiliation}, user_expertise = ${expertise}, user_country = '${country}', user_age = ${age}, user_gender = ${gender}, user_description = '${description}' WHERE id = '${id}'`).on('end', function(result) {
 			if (result.rowCount == 0) {
 				done();

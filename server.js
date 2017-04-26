@@ -102,8 +102,18 @@ app.get('/api/getallnews', function(req, res, next) {
 	});
 });
 
-app.post('/api/getnewsforcategory', function(req, res, next) {
-	Database_e4c.getPostsForCategory(req.body.category, "post", function(err, data) {
+app.post('/api/getnewsforsectors', function(req, res, next) {
+
+	console.log(req.body.sectors);
+	var allSectors = ["'Featured'", "'Water'", "'Energy'", "'Health'", "'Housing'", "'Agriculture'", "'Sanitation'", "'ICT'", "'Transport'"];
+	var selectedSectors = []
+	for(let i = 0; i < req.body.sectors.length; i++) {
+		if (req.body.sectors[i]) {
+			selectedSectors.push(allSectors[i]);
+		}
+	}
+
+	Database_e4c.getPostsForSectors(selectedSectors, "post", function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
@@ -149,8 +159,17 @@ app.get('/api/getallwebinars', function(req, res, next) {
 	});
 });
 
-app.post('/api/getwebinarsforcategory', function(req, res, next) {
-	Database_e4c.getPostsForCategory(req.body.category, "wwebinars", function(err, data) {
+app.post('/api/getwebinarsforsectors', function(req, res, next) {
+	
+	var allSectors = ["'Featured'", "'Water'", "'Energy'", "'Health'", "'Housing'", "'Agriculture'", "'Sanitation'", "'ICT'", "'Transport'"];
+	var selectedSectors = []
+	for(let i = 0; i < req.body.sectors.length; i++) {
+		if (req.body.sectors[i]) {
+			selectedSectors.push(allSectors[i]);
+		}
+	}
+
+	Database_e4c.getPostsForSectors(selectedSectors, "wwebinars", function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});

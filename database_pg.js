@@ -34,9 +34,8 @@ Database.createAccount = function(firstname, lastname, email, password, profstat
 						callback(e);
 					client.query(`INSERT INTO users (id, user_firstname, user_lastname, user_email, user_pass, user_profstatus, user_affiliation, user_expertise, user_country, user_age, user_gender, user_sectors) VALUES (uuid_generate_v4(), '${firstname}', '${lastname}', '${email}', '${hash}', '${profstatus}', '${affiliation}', '${expertise}', '${country}', ${age}, '${gender}', ARRAY${sectors})`);
 					client.query(`SELECT * FROM users WHERE user_email = '${email}'`).on('end', function(result) {
-						let id = result.rows[0]["id"];
 						done();
-						callback(null, id);
+						callback(null, result.rows[0]);
 					});
 				});
 			}
@@ -60,7 +59,7 @@ Database.validateUser = function(email, password, callback) {
 				done();
 				Hash.validatePassword(password, result.rows[0].user_pass, function(e, res) {
 					if (e) callback(e);
-					if (res) callback(null, {id : id, firstname : firstname, lastname: lastname});
+					if (res) callback(null, result.rows[0]);
 					else callback("password or username does not match");
 				});
 			}

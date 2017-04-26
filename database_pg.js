@@ -49,7 +49,7 @@ Database.editAccount = function(id, firstname, lastname, profstatus, affiliation
 			done();
 			callback(err);
 		}
-		
+
 		client.query(`UPDATE users SET user_firstname = '${firstname}', user_lastname = '${lastname}', user_profstatus = ${profstatus}, user_affiliation = ${affiliation}, user_expertise = ${expertise}, user_country = '${country}', user_age = ${age}, user_gender = ${gender}, user_description = '${description}' WHERE id = '${id}'`).on('end', function(result) {
 			if (result.rowCount == 0) {
 				done();
@@ -98,18 +98,8 @@ Database.getUserByID = function(userid, callback) {
 		let query = client.query(`SELECT * FROM users WHERE id = '${userid}'`).on('end', function(result) {
 			if (result.rowCount == 0) callback("user does not exist");
 			else {
-
-				let data = {
-					firstname	:  result.rows[0]["user_firstname"],
-					lastname	:  result.rows[0]["user_lastname"],
-					affiliation :  result.rows[0]["user_affiliation"],
-					expertise	:  result.rows[0]["user_expertise"],
-					sectors		:  result.rows[0]["user_sectors"],
-					projects	:  result.rows[0]["user_projects"]
-				};
-
 				done();
-				callback(null, data);
+				callback(null, result.rows[0]);
 			}
 		})
 	});

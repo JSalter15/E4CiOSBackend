@@ -14,7 +14,7 @@ pg.connect(PG_DATABASE_URL, function(err, client) {
 Account queries
 *******************************************************************************/
 
-Database.createAccount = function(firstname, lastname, email, password, profstatus, affiliation, expertise, country, age, gender, sectors, callback) {
+Database.createAccount = function(email, password, profstatus, affiliation, expertise, country, age, gender, sectors, callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {
 			done();
@@ -32,7 +32,7 @@ Database.createAccount = function(firstname, lastname, email, password, profstat
 				Hash.hashPassword(password, function(e, hash) {
 					if (e)
 						callback(e);
-					client.query(`INSERT INTO users (id, user_firstname, user_lastname, user_email, user_pass, user_profstatus, user_affiliation, user_expertise, user_country, user_age, user_gender, user_sectors) VALUES (uuid_generate_v4(), '${firstname}', '${lastname}', '${email}', '${hash}', '${profstatus}', '${affiliation}', '${expertise}', '${country}', ${age}, '${gender}', ARRAY${sectors})`);
+					client.query(`INSERT INTO users (id, user_email, user_pass, user_profstatus, user_affiliation, user_expertise, user_country, user_age, user_gender, user_sectors) VALUES (uuid_generate_v4(), '${email}', '${hash}', '${profstatus}', '${affiliation}', '${expertise}', '${country}', ${age}, '${gender}', ARRAY${sectors})`);
 					client.query(`SELECT * FROM users WHERE user_email = '${email}'`).on('end', function(result) {
 						done();
 						callback(null, result.rows[0]);
@@ -43,6 +43,27 @@ Database.createAccount = function(firstname, lastname, email, password, profstat
 	});
 };
 
+Database.editAccount = function(id, firstname, lastname, profstatus, affiliation, expertise, country, age, gender, description, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		client.query(`UPDATE users SET user_firstname = '${firstname}', user_lastname = '${lastname}', user_profstatus = ${profstatus}, user_affiliation = ${affiliation}, user_expertise = ${expertise}, user_country = '${country}', user_age = ${age}, user_gender = ${gender}, user_description = '${description}' WHERE id = '${id}'`).on('end', function(result) {
+			if (result.rowCount == 0) {
+				done();
+				callback("user does not exist");
+			}
+			else {
+				done()
+				callback(null, 200);
+			}
+		})
+
+	});
+}
+
 Database.validateUser = function(email, password, callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {
@@ -51,11 +72,11 @@ Database.validateUser = function(email, password, callback) {
 		}
 
 		let query = client.query(`SELECT * FROM users WHERE user_email = '${email}'`).on('end', function(result) {
-			if (result.rowCount == 0) callback("user does not exist");
+			if (result.rowCount == 0) {
+				done()
+				callback("user does not exist");
+			}
 			else {
-				let id = result.rows[0]["id"];
-				let firstname = result.rows[0]["user_firstname"];
-				let lastname = result.rows[0]["user_lastname"];
 				done();
 				Hash.validatePassword(password, result.rows[0].user_pass, function(e, res) {
 					if (e) callback(e);

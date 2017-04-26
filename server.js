@@ -28,8 +28,6 @@ app.post('/api/login', function(req, res, next) {
 });
 
 app.post('/api/createaccount', function(req, res, next) {
-	let firstname = req.body.firstname;
-	let lastname = req.body.lastname;
 	let email = req.body.email;
 	let password = req.body.password;
 	let profstatus = req.body.profstatus;
@@ -39,11 +37,28 @@ app.post('/api/createaccount', function(req, res, next) {
 	let age = req.body.age;
 	let gender = req.body.gender;
 	let sectors = req.body.sectors;
-	
 
-	Database_pg.createAccount(firstname, lastname, email, password, profstatus, affiliation, expertise, country, age, gender, sectors, function(err, data) {
+	Database_pg.createAccount(email, password, profstatus, affiliation, expertise, country, age, gender, sectors, function(err, data) {
 		if (err) return next(err);
-		res.status(200).json({id:data, firstname:firstname, lastname:lastname});
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/editaccount', function(req, res, next) {
+	let id = req.body.id;
+	let firstname = req.body.firstname;
+	let lastname = req.body.lastname;
+	let profstatus = req.body.profstatus;
+	let affiliation = req.body.affiliation;
+	let expertise = req.body.expertise;
+	let country = req.body.country;
+	let age = req.body.age;
+	let gender = req.body.gender;
+	let description = req.body.description;
+
+	Database_pg.editAccount(id, firstname, lastname, profstatus, affiliation, expertise, country, age, gender, description, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
 	});
 });
 

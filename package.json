@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/JSalter15/E4CiOSBackend#readme",
   "dependencies": {
+    "async": "^2.3.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",

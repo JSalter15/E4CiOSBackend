@@ -92,8 +92,7 @@ app.get('/api/getallnews', function(req, res, next) {
 
 app.post('/api/getnewsforsectors', function(req, res, next) {
 
-	console.log(req.body.sectors);
-	var allSectors = ["'Featured'", "'Water'", "'Energy'", "'Health'", "'Housing'", "'Agriculture'", "'Sanitation'", "'ICT'", "'Transport'"];
+	var allSectors = ["'Featured'", "'Water'", "'Energy'", "'Health'", "'Housing'", "'Agriculture'", "'Sanitation'", "'Information Systems'", "'Transport'"];
 	var selectedSectors = []
 	for(let i = 0; i < req.body.sectors.length; i++) {
 		if (req.body.sectors[i]) {
@@ -108,7 +107,7 @@ app.post('/api/getnewsforsectors', function(req, res, next) {
 });
 
 app.post('/api/getarticlebyid', function(req, res, next) {
-	Database_e4c.getPostByID(req.body.articleid, function(err, data) {
+	Database_e4c.getPostByID(req.body.articleid, "post", function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
@@ -164,7 +163,7 @@ app.post('/api/getwebinarsforsectors', function(req, res, next) {
 });
 
 app.post('/api/getwebinarbyid', function(req, res, next) {
-	Database_e4c.getPostByID(req.body.articleid, function(err, data) {
+	Database_e4c.getPostByID(req.body.articleid, "wwebinars", function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});

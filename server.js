@@ -36,9 +36,8 @@ app.post('/api/createaccount', function(req, res, next) {
 	let country = req.body.country;
 	let age = req.body.age;
 	let gender = req.body.gender;
-	let sectors = req.body.sectors;
 
-	Database_pg.createAccount(email, password, profstatus, affiliation, expertise, country, age, gender, sectors, function(err, data) {
+	Database_pg.createAccount(email, password, profstatus, affiliation, expertise, country, age, gender, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
@@ -55,17 +54,6 @@ app.post('/api/editaccount', function(req, res, next) {
 	let age = req.body.age;
 	let gender = req.body.gender;
 	let description = req.body.description;
-
-	console.log(id);
-	console.log(firstname);
-	console.log(lastname);
-	console.log(profstatus);
-	console.log(affiliation);
-	console.log(expertise);
-	console.log(country);
-	console.log(age);
-	console.log(gender);
-	console.log(description);
 
 	Database_pg.editAccount(id, firstname, lastname, profstatus, affiliation, expertise, country, age, gender, description, function(err, data) {
 		if (err) return next(err);

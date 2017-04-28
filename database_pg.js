@@ -14,7 +14,7 @@ pg.connect(PG_DATABASE_URL, function(err, client) {
 Account queries
 *******************************************************************************/
 
-Database.createAccount = function(email, password, profstatus, affiliation, expertise, country, age, gender, sectors, callback) {
+Database.createAccount = function(email, password, profstatus, affiliation, expertise, country, age, gender, callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {
 			done();
@@ -32,7 +32,7 @@ Database.createAccount = function(email, password, profstatus, affiliation, expe
 				Hash.hashPassword(password, function(e, hash) {
 					if (e)
 						callback(e);
-					client.query(`INSERT INTO users (id, user_email, user_pass, user_profstatus, user_affiliation, user_expertise, user_country, user_age, user_gender, user_sectors) VALUES (uuid_generate_v4(), '${email}', '${hash}', '${profstatus}', '${affiliation}', '${expertise}', '${country}', ${age}, '${gender}', ARRAY${sectors})`);
+					client.query(`INSERT INTO users (id, user_email, user_pass, user_profstatus, user_affiliation, user_expertise, user_country, user_age, user_gender) VALUES (uuid_generate_v4(), '${email}', '${hash}', '${profstatus}', '${affiliation}', '${expertise}', ${country}, ${age}, '${gender}')`);
 					client.query(`SELECT * FROM users WHERE user_email = '${email}'`).on('end', function(result) {
 						done();
 						callback(null, result.rows[0]);
@@ -50,7 +50,7 @@ Database.editAccount = function(id, firstname, lastname, profstatus, affiliation
 			callback(err);
 		}
 
-		client.query(`UPDATE users SET user_firstname = '${firstname}', user_lastname = '${lastname}', user_profstatus = ${profstatus}, user_affiliation = ${affiliation}, user_expertise = ${expertise}, user_country = '${country}', user_age = ${age}, user_gender = ${gender}, user_description = '${description}' WHERE id = '${id}'`).on('end', function(result) {
+		client.query(`UPDATE users SET user_firstname = '${firstname}', user_lastname = '${lastname}', user_profstatus = ${profstatus}, user_affiliation = ${affiliation}, user_expertise = ${expertise}, user_country = ${country}, user_age = ${age}, user_gender = ${gender}, user_description = '${description}' WHERE id = '${id}'`).on('end', function(result) {
 			if (result.rowCount == 0) {
 				done();
 				callback("user does not exist");

@@ -134,6 +134,13 @@ app.post('/api/getfavarticlesforuser', function(req, res, next) {
 	});
 });
 
+app.post('/api/searchnews', function(req, res, next) {
+	Database_e4c.searchPosts(req.body.query, 'post', function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
 
 /******************************************************************************
 Webinars APIs
@@ -190,6 +197,12 @@ app.post('/api/getfavwebinarsforuser', function(req, res, next) {
 	});
 });
 
+app.post('/api/searchwebinars', function(req, res, next) {
+	Database_e4c.searchPosts(req.body.query, 'wwebinars', function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
 
 /*****************************************************************************
 Project APIs
@@ -239,6 +252,27 @@ app.get('/api/getallprojects', function(req, res, next) {
 
 app.post('/api/deleteproject', function(req, res, next) {
 	Database_pg.deleteProject(req.body.projectid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/postcommentonproject', function(req, res, next) {
+	Database_pg.postCommentOnProject(req.body.authorid, req.body.projectid, req.body.content, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/deletecommentforproject', function(req, res, next) {
+	Database_pg.deleteCommentForProject(req.body.commentid, req.body.projectid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/getallcommentsforproject', function(req, res, next) {
+	Database_pg.getAllCommentsForProject(req.body.projectid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});

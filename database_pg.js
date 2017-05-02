@@ -357,6 +357,53 @@ Database.deleteProject = function(projectid, callback) {
 	});
 };
 
+Database.postCommentOnProject = function(authorid, projectid, content, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		client.query(`INSERT INTO project_comments (id, author_id, project_id, content) VALUES (uuid_generate_v4(), '${authorid}', '${projectid}', '${content}')`);
+		client.query(`UPDATE projects SET num_comments = num_comments + 1 WHERE id = '${projectid}'`);
+		done();
+		callback(null, true);
+	});
+}
+
+Database.deleteCommentForProject = function(commentid, projectid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		client.query(`DELETE FROM project_comments WHERE id = '${commentid}'`);
+		client.query(`UPDATE projects SET num_comments = num_comments - 1 WHERE id = '${projectid}'`);
+		done();
+		callback(null, true);
+	});
+}
+
+Database.getAllCommentsForProject = function(projectid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		client.query(`SELECT * FROM project_comments WHERE project_id = '${projectid}' ORDER BY date DESC`).on('end', function(result) {
+			if (result.rowCount == 0) {
+				done()
+				callback("no comments on project!");
+			}
+			else {
+				done();
+				callback(null, result.rows);
+			}
+		}); 
+	});
+}
 
 /******************************************************************************
 Search queries

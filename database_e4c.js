@@ -115,4 +115,21 @@ Database.getAllNews = function(callback) {
 	});
 }
 
+Database.searchPosts = function(searchQuery, postType, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		let query = client.query(`SELECT * FROM wp_posts WHERE post_title ILIKE '%${searchQuery}%' AND post_type = '${postType}' ORDER BY post_date DESC`).on('end', function(result) {
+			done();
+			callback(null, result.rows);
+		});
+	});
+}
+
+
+
+
 module.exports = Database;

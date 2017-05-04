@@ -209,7 +209,14 @@ Project APIs
 ******************************************************************************/
 
 app.post('/api/createproject', function(req, res, next) {
-	Database_pg.createProject(req.body.owner, req.body.title, req.body.contributors, req.body.description, req.body.sectors, function(err, data) {
+	Database_pg.createProject(req.body.owner, req.body.title, req.body.contributors, req.body.description, req.body.sector, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
+app.post('/api/editproject', function(req, res, next) {
+	Database_pg.editProject(req.body.id, req.body.title, req.body.contributors, req.body.description, req.body.sector, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
@@ -275,7 +282,7 @@ app.post('/api/getallcommentsforproject', function(req, res, next) {
 	Database_pg.getAllCommentsForProject(req.body.projectid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
-	});
+	});e
 });
 
 /******************************************************************************

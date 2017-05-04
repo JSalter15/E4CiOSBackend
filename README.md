@@ -11,4 +11,6 @@
 
 **Database**: PostgreSQL accessed with node-postgres
 
+**API Documentation**: See apidocs.pdf in repository
+
 **Contact** Joseph Salter (jcsalter@princeton.edu) to gain ownership of repo and database

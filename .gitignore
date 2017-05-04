@@ -65,4 +65,4 @@ commands.load
 
 *.csv
 
-sqlqueries
+sqlqueries/

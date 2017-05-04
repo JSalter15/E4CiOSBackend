@@ -340,7 +340,7 @@ Database.getProjectsBySector = function(sector, callback) {
 			callback(err);
 		}
 
-		let query = client.query(`SELECT * FROM projects WHERE '${sector}' = ANY(sectors) ORDER BY date_created DESC`).on('end', function(result) {
+		let query = client.query(`SELECT * FROM projects WHERE sector = '${sector}' ORDER BY date_created DESC`).on('end', function(result) {
 			if (result.rowCount == 0) callback("no projects for that sector");
 			else {
 				done();

@@ -441,6 +441,11 @@ Database.searchUsers = function(searchQuery, callback) {
 		}
 
 		let query = client.query(`SELECT * FROM users WHERE user_firstname || ' ' || user_lastname ILIKE '%${searchQuery}%'`).on('end', function(result) {
+			if (result.rowCount == 0) {
+				done()
+				callback("No results!")
+			}
+
 			done();
 			callback(null, result.rows);
 		});
@@ -457,6 +462,11 @@ Database.searchProjects = function(searchQuery, callback) {
 		}
 
 		let query = client.query(`SELECT * FROM projects WHERE title ILIKE '%${searchQuery}%' OR description ILIKE '%${searchQuery}%' OR sector ILIKE '%${searchQuery}%' ORDER BY date_created DESC`).on('end', function(result) {
+			if (result.rowCount == 0) {
+				done()
+				callback("No results!")
+			}
+
 			done();
 			callback(null, result.rows);
 		});

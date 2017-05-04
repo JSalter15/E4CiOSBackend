@@ -282,7 +282,7 @@ app.post('/api/getallcommentsforproject', function(req, res, next) {
 	Database_pg.getAllCommentsForProject(req.body.projectid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
-	});e
+	});
 });
 
 /******************************************************************************

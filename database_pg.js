@@ -418,7 +418,7 @@ Database.getAllCommentsForProject = function(projectid, callback) {
 
 		client.query(`SELECT * FROM project_comments WHERE project_id = '${projectid}' ORDER BY date DESC`).on('end', function(result) {
 			if (result.rowCount == 0) {
-				done()
+				done();
 				callback("no comments on project!");
 			}
 			else {
@@ -440,7 +440,7 @@ Database.searchUsers = function(searchQuery, callback) {
 			callback(err);
 		}
 
-		let query = client.query(`SELECT * FROM users WHERE user_firstname || ' ' || user_lastname ILIKE '%${searchQuery}%' OR array_to_string(user_sectors, '|') ILIKE '%${searchQuery}%' OR user_country ILIKE '%${searchQuery}%'`).on('end', function(result) {
+		let query = client.query(`SELECT * FROM users WHERE user_firstname || ' ' || user_lastname ILIKE '%${searchQuery}%'`).on('end', function(result) {
 			done();
 			callback(null, result.rows);
 		});
@@ -456,7 +456,7 @@ Database.searchProjects = function(searchQuery, callback) {
 			callback(err);
 		}
 
-		let query = client.query(`SELECT * FROM projects WHERE title ILIKE '%${searchQuery}%' OR description ILIKE '%${searchQuery}%' OR array_to_string(sectors, '|') ILIKE '%${searchQuery}%' ORDER BY date_created DESC`).on('end', function(result) {
+		let query = client.query(`SELECT * FROM projects WHERE title ILIKE '%${searchQuery}%' OR description ILIKE '%${searchQuery}%' OR sector ILIKE '%${searchQuery}%' ORDER BY date_created DESC`).on('end', function(result) {
 			done();
 			callback(null, result.rows);
 		});

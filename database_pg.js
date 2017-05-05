@@ -347,7 +347,7 @@ Database.getProjectsForUser = function(userid, callback) {
 			}
 			if (result.rows[0].user_projects.length == 0) {
 				done();
-				return callback("user has no projects");
+				return callback(null, []);
 			}
 
 			let projects = []
@@ -360,7 +360,7 @@ Database.getProjectsForUser = function(userid, callback) {
 						
 				if (result.rowCount == 0) {
 					done()
-					return callback("user has no projects");
+					return callback(null, []);
 				}
 				done();
 				callback(null, result.rows);
@@ -395,7 +395,10 @@ Database.getAllProjects = function(callback) {
 		}
 
 		let query = client.query(`SELECT * FROM projects ORDER BY date_created DESC`).on('end', function(result) {
-			if (result.rowCount == 0) callback("no projects!");
+			if (result.rowCount == 0) {
+				done()
+				callback(null, []);
+			}
 			else {
 				done();
 				callback(null, result.rows);
@@ -455,7 +458,7 @@ Database.getAllCommentsForProject = function(projectid, callback) {
 		client.query(`SELECT * FROM project_comments WHERE project_id = '${projectid}' ORDER BY date DESC`).on('end', function(result) {
 			if (result.rowCount == 0) {
 				done();
-				callback("no comments on project!");
+				callback(null, []);
 			}
 			else {
 				done();

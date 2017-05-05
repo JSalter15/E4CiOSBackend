@@ -107,21 +107,21 @@ app.post('/api/getnewsforsectors', function(req, res, next) {
 });
 
 app.post('/api/getarticlebyid', function(req, res, next) {
-	Database_e4c.getPostByID(req.body.articleid, "post", function(err, data) {
+	Database_e4c.getPostByID(req.body.id, "post", function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
 });
 
 app.post('/api/favoritearticleforuser', function(req, res, next) {
-	Database_pg.favoriteArticleForUser(req.body.articleid, req.body.userid, function(err, data) {
+	Database_pg.favoriteArticleForUser(req.body.id, req.body.userid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
 });
 
 app.post('/api/unfavoritearticleforuser', function(req, res, next) {
-	Database_pg.unfavoriteArticleForUser(req.body.articleid, req.body.userid, function(err, data) {
+	Database_pg.unfavoriteArticleForUser(req.body.id, req.body.userid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
@@ -170,21 +170,21 @@ app.post('/api/getwebinarsforsectors', function(req, res, next) {
 });
 
 app.post('/api/getwebinarbyid', function(req, res, next) {
-	Database_e4c.getPostByID(req.body.articleid, "wwebinars", function(err, data) {
+	Database_e4c.getPostByID(req.body.id, "wwebinars", function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
 });
 
 app.post('/api/favoritewebinarforuser', function(req, res, next) {
-	Database_pg.favoriteWebinarForUser(req.body.webinarid, req.body.userid, function(err, data) {
+	Database_pg.favoriteWebinarForUser(req.body.id, req.body.userid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});
 });
 
 app.post('/api/unfavoritewebinarforuser', function(req, res, next) {
-	Database_pg.unfavoriteWebinarForUser(req.body.webinarid, req.body.userid, function(err, data) {
+	Database_pg.unfavoriteWebinarForUser(req.body.id, req.body.userid, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});

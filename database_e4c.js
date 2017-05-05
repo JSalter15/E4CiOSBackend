@@ -11,6 +11,7 @@ Database.getPostsForSectors = function(selectedSectors, postType, callback) {
 			callback(err);
 		}
 
+
 		var termids = [];
 		var finalResults = [];
 		client.query("SELECT term_id FROM wp_terms WHERE name IN (" + selectedSectors.join() + ")").on('row', function(row, result) {

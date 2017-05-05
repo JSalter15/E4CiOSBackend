@@ -216,7 +216,7 @@ app.post('/api/createproject', function(req, res, next) {
 });
 
 app.post('/api/editproject', function(req, res, next) {
-	Database_pg.editProject(req.body.id, req.body.title, req.body.description, req.body.sector, function(err, data) {
+	Database_pg.editProject(req.body.id, req.body.title, req.body.description, req.body.sector, req.body.owner_name, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});

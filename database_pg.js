@@ -333,6 +333,42 @@ Database.getProjectByID = function(projectid, callback) {
 	});
 };
 
+Database.getProjectsForUser = function(userid, callback) {
+	pg.connect(PG_DATABASE_URL, function(err, client, done) {
+		if (err) {
+			done();
+			callback(err);
+		}
+
+		let query = client.query(`SELECT * FROM users WHERE id = '${userid}'`).on('end', function(result) {
+			if (result.rowCount == 0) {
+				done()
+				return callback("user does not exist");
+			}
+			if (result.rows[0].user_projects.length == 0) {
+				done();
+				return callback("user has no projects");
+			}
+
+			let projects = []
+			for (var i = 0; i < result.rows[0].user_projects.length; i++) {
+				let newProj = "'" + result.rows[0].user_projects[i] + "'";
+				projects.push(newProj);
+			}
+
+			client.query("SELECT * FROM projects WHERE id IN (" + projects.join() + ")").on('end', function(result) {
+						
+				if (result.rowCount == 0) {
+					done()
+					return callback("user has no projects");
+				}
+				done();
+				callback(null, result.rows);
+			});
+		});
+	});
+}
+
 Database.getProjectsBySector = function(sector, callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {

@@ -243,6 +243,13 @@ app.post('/api/getprojectbyid', function(req, res, next) {
 	});
 });
 
+app.post('/api/getprojectsforuser', function(req, res, next) {
+	Database_pg.getProjectsForUser(req.body.userid, function(err, data) {
+		if (err) return next(err);
+		res.status(200).json(data);
+	});
+});
+
 app.post('/api/getprojectsbysector', function(req, res, next) {
 	Database_pg.getProjectsBySector(req.body.sector, function(err, data) {
 		if (err) return next(err);

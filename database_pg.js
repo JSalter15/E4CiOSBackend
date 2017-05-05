@@ -246,8 +246,8 @@ Database.createProject = function(owner, title, description, sector, owner_name,
 			callback(err);
 		}
 
-		client.query(`SELECT EXISTS(SELECT * FROM projects WHERE title = '${title}')`).on('row', function(row, result) {
-			if (row["exists"] == true) {
+		client.query(`SELECT * FROM projects WHERE title = '${title}'`).on('end', function(result) {
+			if (result.rowCount > 0) {
 				done();
 				let errorString = "A project already exists with that title!";
 				callback(errorString);

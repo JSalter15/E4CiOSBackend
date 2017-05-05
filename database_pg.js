@@ -483,8 +483,6 @@ Database.searchUsers = function(searchQuery, callback) {
 			done();
 			callback(null, result.rows);
 		});
-
-
 	});
 };
 

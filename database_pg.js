@@ -188,13 +188,13 @@ Database.getFavArticlesForUser = function(userid, callback) {
 
 			if (fav_articles.length == 0) {
 				done();
-				return callback("user has no favorite articles");
+				return callback(null, []);
 			}
 			client.query("SELECT * FROM wp_posts WHERE ID IN (" + fav_articles.join() + ")").on('end', function(result) {
 						
 				if (result.rowCount == 0) {
 					done()
-					return callback("user has no favorite articles");
+					return callback(null, []);
 				}
 				done();
 				callback(null, result.rows);
@@ -218,13 +218,13 @@ Database.getFavWebinarsForUser = function(userid, callback) {
 
 			if (fav_webinars.length == 0) {
 				done();
-				return callback("user has no favorite webinars");
+				return callback(null, []);
 			}
 			client.query("SELECT * FROM wp_posts WHERE ID IN (" + fav_webinars.join() + ")").on('end', function(result) {
 						
 				if (result.rowCount == 0) {
 					done()
-					return callback("user has no favorite webinars");
+					return callback(null, []);
 				}
 				done();
 				callback(null, result.rows);

@@ -61,7 +61,7 @@ Database.getPostByID = function(postid, postType, callback) {
 		client.query(`SELECT * FROM wp_posts WHERE ID = ${postid} AND post_type = '${postType}'`).on('end', function(result1) {
 			if (result1.rowCount == 0) {
 				done();
-				return callback("post does not exist!");
+				return callback(null, {});
 			}
 
 			let sectors = []

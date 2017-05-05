@@ -15,12 +15,13 @@ Database.getPostsForSectors = function(selectedSectors, postType, callback) {
 		var finalResults = [];
 		let selectedSectorsJoined = selectedSectors.join()
 		client.query("SELECT term_id FROM wp_terms WHERE name IN (" + selectedSectorsJoined + ")").on('row', function(row, result) {
+			console.log("HERE");
 			termids.push(row.term_id);
 		}).on('end', function(result) {
 
 			let termidsJoined = termids.join()
 			let query = client.query("SELECT object_id FROM wp_term_relationships WHERE term_taxonomy_id IN (" + termidsJoined + ")");
-
+			console.log("HERE 2");
 			var objectids = []
 			query.on('row', function(row, results) {
 				objectids.push(row.object_id);
@@ -34,7 +35,7 @@ Database.getPostsForSectors = function(selectedSectors, postType, callback) {
 
 				let objectidsJoined = objectids.join()
 				let query2 = client.query("SELECT * FROM wp_posts WHERE ID IN (" + objectidsJoined + ") AND post_type = '" + postType + "' ORDER BY post_date DESC");
-
+				console.log("HERE 3");
 				query2.on('end', function(result) {
 					
 					if (result.rowCount == 0) {

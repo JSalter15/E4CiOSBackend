@@ -239,7 +239,7 @@ Database.getFavWebinarsForUser = function(userid, callback) {
 Project queries
 *******************************************************************************/
 
-Database.createProject = function(owner, title, contributors, description, sector, callback) {
+Database.createProject = function(owner, title, contributors, description, sector, owner_name, callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {
 			done();
@@ -252,7 +252,7 @@ Database.createProject = function(owner, title, contributors, description, secto
 				let errorString = "A project already exists with that title!";
 				callback(errorString);
 			} else {
-				client.query(`INSERT INTO projects (id, owner, title, contributors, description, sector) VALUES (uuid_generate_v4(), '${owner}', '${title}', ARRAY${contributors}::uuid[], '${description}', '${sector}')`);
+				client.query(`INSERT INTO projects (id, owner, title, contributors, description, sector, owner_name) VALUES (uuid_generate_v4(), '${owner}', '${title}', ARRAY${contributors}::uuid[], '${description}', '${sector}', '${owner_name}')`);
 				client.query(`SELECT * FROM projects WHERE title = '${title}'`).on('end', function(result) {
 					client.query(`UPDATE users SET user_projects = array_append(user_projects, '${result.rows[0].id}') WHERE id = '${owner}' AND NOT user_projects::text[] @> ARRAY['${result.rows[0].id}']`);
 					done();

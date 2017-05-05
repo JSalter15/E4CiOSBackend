@@ -209,7 +209,7 @@ Project APIs
 ******************************************************************************/
 
 app.post('/api/createproject', function(req, res, next) {
-	Database_pg.createProject(req.body.owner, req.body.title, req.body.contributors, req.body.description, req.body.sector, function(err, data) {
+	Database_pg.createProject(req.body.owner, req.body.title, req.body.contributors, req.body.description, req.body.sector, req.body.owner_name, function(err, data) {
 		if (err) return next(err);
 		res.status(200).json(data);
 	});

@@ -46,7 +46,6 @@ app.post('/api/createaccount', function(req, res, next) {
 });
 
 app.post('/api/editaccount', function(req, res, next) {
-	
 	let id = req.body.id;
 	let firstname = req.body.firstname;
 	let lastname = req.body.lastname;
@@ -64,10 +63,6 @@ app.post('/api/editaccount', function(req, res, next) {
 		res.status(200).json(data);
 	});
 });
-
-// app.post('/api/editaccount', function(req, res, next) {
-
-// });
 
 app.post('/api/deleteaccount', function(req, res, next) {
 	

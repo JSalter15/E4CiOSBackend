@@ -104,7 +104,7 @@ app.post('/api/getnewsforsectors', function(req, res, next) {
 	
 
 	var allSectors = ["'Featured'", "'Water'", "'Energy'", "'Health'", "'Housing'", "'Agriculture'", "'Sanitation'", "'Information Systems'", "'Transport'"];
-	var selectedSectors = []
+	var selectedSectors = [];
 	for(let i = 0; i < req.body.sectors.length; i++) {
 		if (req.body.sectors[i]) {
 			selectedSectors.push(allSectors[i]);
@@ -181,7 +181,7 @@ app.post('/api/getwebinarsforsectors', function(req, res, next) {
 	
 	
 	var allSectors = ["'Featured'", "'Water'", "'Energy'", "'Health'", "'Housing'", "'Agriculture'", "'Sanitation'", "'ICT'", "'Transport'"];
-	var selectedSectors = []
+	var selectedSectors = [];
 	for(let i = 0; i < req.body.sectors.length; i++) {
 		if (req.body.sectors[i]) {
 			selectedSectors.push(allSectors[i]);

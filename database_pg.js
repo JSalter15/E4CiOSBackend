@@ -214,7 +214,7 @@ Database.getFavWebinarsForUser = function(userid, callback) {
 
 		var fav_webinars;
 		client.query(`SELECT * FROM users WHERE ID = '${userid}'`).on('end', function(result) {
-			fav_articles = result.rows[0]["fav_webinars"];
+			fav_webinars = result.rows[0]["fav_webinars"];
 
 			if (fav_webinars.length == 0) {
 				done();

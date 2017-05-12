@@ -81,11 +81,8 @@ Database.getAllWebinars = function(callback) {
 		}
 
 		let query = client.query(`SELECT * FROM wp_posts WHERE post_type = 'wwebinars' ORDER BY post_date DESC`).on('end', function(result) {
-			if (result.rowCount == 0) callback("no webinars!");
-			else {
-				done();
-				callback(null, result.rows);
-			}
+			done();
+			callback(null, result.rows);
 		});
 	});
 }
@@ -99,11 +96,8 @@ Database.getAllNews = function(callback) {
 		}
 
 		let query = client.query(`SELECT * FROM wp_posts WHERE post_type = 'post' ORDER BY post_date DESC`).on('end', function(result) {
-			if (result.rowCount == 0) callback("no news!");
-			else {
-				done();
-				callback(null, result.rows);
-			}
+			done();
+			callback(null, result.rows);
 		});
 
 	});
@@ -122,8 +116,5 @@ Database.searchPosts = function(searchQuery, postType, callback) {
 		});
 	});
 }
-
-
-
 
 module.exports = Database;

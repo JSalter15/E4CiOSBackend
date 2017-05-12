@@ -4,7 +4,7 @@ var Database = [];
 const PG_DATABASE_URL = 'postgres://xeqtnkjlbzfhad:0f8eb3c9a777c80ad960ea9ac1dd010596b1991daf523f65db58682308d1fab7@ec2-23-23-223-2.compute-1.amazonaws.com:5432/d7o63skrv6brj5'
 pg.defaults.ssl = true;
 
-Database.getPostsForSectors = function(selectedSectors, postType, callback) {
+Database.getPostsForSectors = function(searchQuery, selectedSectors, postType, callback) {
 	pg.connect(PG_DATABASE_URL, function(err, client, done) {
 		if (err) {
 			done();
@@ -28,18 +28,12 @@ Database.getPostsForSectors = function(selectedSectors, postType, callback) {
 
 				if (results.rowCount == 0) {
 					done();
-					return callback("no posts for category!");
+					return callback(null, []);
 				}
 
 				let objectidsJoined = objectids.join()
-				let query2 = client.query("SELECT * FROM wp_posts WHERE ID IN (" + objectidsJoined + ") AND post_type = '" + postType + "' ORDER BY post_date DESC");
+				let query2 = client.query("SELECT * FROM wp_posts WHERE post_title ILIKE '%" + searchQuery + "%' AND ID IN (" + objectidsJoined + ") AND post_type = '" + postType + "' ORDER BY post_date DESC");
 				query2.on('end', function(result) {
-					
-					if (result.rowCount == 0) {
-						done()
-						return callback("no posts for category!");
-					}
-
 					done();
 					callback(null, result.rows);
 				});

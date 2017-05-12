@@ -111,7 +111,7 @@ app.post('/api/getnewsforsectors', function(req, res, next) {
 		}
 	}
 
-	Database_e4c.getPostsForSectors(selectedSectors, "post", function(err, data) {
+	Database_e4c.getPostsForSectors(req.body.query, selectedSectors, "post", function(err, data) {
 		if (err) return next(err);
 		
 		res.status(200).json(data);
@@ -188,7 +188,7 @@ app.post('/api/getwebinarsforsectors', function(req, res, next) {
 		}
 	}
 
-	Database_e4c.getPostsForSectors(selectedSectors, "wwebinars", function(err, data) {
+	Database_e4c.getPostsForSectors(req.body.query, selectedSectors, "wwebinars", function(err, data) {
 		if (err) return next(err);
 		
 		res.status(200).json(data);

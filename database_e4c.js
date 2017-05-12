@@ -32,7 +32,7 @@ Database.getPostsForSectors = function(searchQuery, selectedSectors, postType, c
 				}
 
 				let objectidsJoined = objectids.join()
-				let query2 = client.query("SELECT * FROM wp_posts WHERE post_title ILIKE '%" + searchQuery + "%' AND ID IN (" + objectidsJoined + ") AND post_type = '" + postType + "' ORDER BY post_date DESC");
+				let query2 = client.query("SELECT * FROM wp_posts WHERE ID IN (" + objectidsJoined + ") AND post_type = '" + postType + "' AND post_title ILIKE '%" + searchQuery + "%' ORDER BY post_date DESC");
 				query2.on('end', function(result) {
 					done();
 					callback(null, result.rows);
